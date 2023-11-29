@@ -2,10 +2,13 @@ package FPrincipal;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class Principal extends JFrame{
@@ -38,9 +41,49 @@ public class Principal extends JFrame{
 		JButton bEnviar = new JButton("Calcular promedio");
 		this.add(bEnviar);
 		
+		bEnviar.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					calcularPromedio();
+				} catch (MiExcepcion e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+				}
+				txtNombre.setText("");
+				txtNota1.setText("");
+				txtNota2.setText("");
+				txtNota3.setText("");
+			}
+			
+		});
+		
 		this.pack();
 	}
 	
+
+	protected void calcularPromedio() throws MiExcepcion{
+		try {
+		double nota1 = Double.parseDouble(this.txtNota1.getText());
+		double nota2 = Double.parseDouble(this.txtNota2.getText());
+		double nota3 = Double.parseDouble(this.txtNota3.getText());
+		double promedio = (nota1 + nota2 + nota3)/3;
+		if(promedio > 5) {
+			throw new MiExcepcion("El promedio no puede ser mayor a 5");
+		}
+		else if(nota1 < 0 || nota2 < 0 || nota3 <0 ) {
+			throw new MiExcepcion("No puede ingresar valores negativos");
+		}
+		else {
+		JOptionPane.showMessageDialog(this, "El promedio de "+ this.txtNombre.getText()+" es: \n"+promedio);
+		}
+		}
+		catch(NumberFormatException e) {
+			JOptionPane.showMessageDialog(this, "solo puede ingresar valores numericos");
+		}
+		
+	}
+
 	public static void main(String[] args) {
 		Principal principal = new Principal();
 		principal.ejecutar();
